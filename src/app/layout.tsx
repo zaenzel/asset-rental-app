@@ -19,7 +19,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={montserrat.className}>
         <div className="bg-gradient-to-r from-cyan-500 to-blue-200 min-h-screen">
-          <header className="fixed top-0 left-0 w-full flex justify-center items-center z-10 ">
+          <header className="fixed top-0 left-0 w-full flex justify-center items-center z-10">
             <Navbar />
           </header>
           {children}

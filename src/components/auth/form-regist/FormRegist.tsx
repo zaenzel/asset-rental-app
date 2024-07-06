@@ -42,7 +42,7 @@ const FormRegist = () => {
                 />
             </div>
 
-            <DescInput />
+            <DescInput title='Address' />
 
             <div className="flex flex-col sm:flex-row gap-x-5 gap-y-5">
                 <TextInput

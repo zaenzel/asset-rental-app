@@ -1,8 +1,14 @@
+import FormAddProduct from '@/components/dashboard/allProduct/addProduct/form-add-product/FormAddProduct'
 import React from 'react'
 
 const page = () => {
+
+
   return (
-    <div>add product page</div>
+    <div className='flex flex-col justify-center items-center'>
+      <h1 className='font-bold text-3xl'>Add Product</h1>
+      <FormAddProduct />
+    </div>
   )
 }
 

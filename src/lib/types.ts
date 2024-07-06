@@ -9,4 +9,19 @@ export type RegistTypes = {
     address: string
     email: string
     password: string
-}   
+}
+
+export type AddProductTypes = {
+    name: string
+    description: string
+    price: number
+    category: string
+    image:string
+}
+
+interface DropDownValueTypes {
+    id:number
+    name:string
+}
+
+export type DropDownItemTypes = DropDownValueTypes []

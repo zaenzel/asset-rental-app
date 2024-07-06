@@ -1,9 +1,15 @@
 import React from 'react'
 
-const DescInput = () => {
+type PropsType = {
+  title: string
+}
+
+const DescInput = ({
+  title
+} : PropsType) => {
   return (
     <div className="flex flex-col gap-2">
-      <p className='text-sm md:text-base'>Address</p>
+      <p className='text-sm md:text-base'>{title}</p>
       <textarea
         className="
                 block w-full rounded-md border-0 

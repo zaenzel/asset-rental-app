@@ -1,4 +1,4 @@
-import BtnAddProduct from '@/components/dashboard/btn-add-product/BtnAddProduct'
+import BtnAddProduct from '@/components/dashboard/allProduct/btn-add-product/BtnAddProduct'
 import Card from '@/components/global/card/Card'
 import React from 'react'
 
