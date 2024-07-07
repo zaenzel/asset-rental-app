@@ -1,68 +1,54 @@
 'use client'
 
-import React, { Dispatch, SetStateAction, useState } from 'react'
+import React, { Dispatch, MouseEvent, MouseEventHandler, SetStateAction, useState } from 'react'
 import { FaChevronDown } from "react-icons/fa6";
 import { motion } from "framer-motion"
 import { dropDownItem } from '@/lib/utils';
+import { UseFormRegister, UseFormSetValue } from 'react-hook-form';
+import { AddProductTypes } from '@/lib/types';
 
 type PropsType = {
-    isChoice: string,
-    isChoiceSet: Dispatch<SetStateAction<string>>
+    register: UseFormRegister<any>
+    name: string
+    validation: object
+    error?: string | any;
 }
 
 const Dropdown = ({
-    isChoice,
-    isChoiceSet
+    register,
+    name,
+    validation,
+    error
 }: PropsType) => {
-
-    const [isClick, isClickSet] = useState(false)
-
 
     return (
         <div className="flex flex-col gap-2">
             <p className='text-sm md:text-base'>Category</p>
-            <div className={`flex justify-between items-center relative
-                    w-full rounded-md border-0 
-                    py-3 px-5 text-gray-900
-                    ${isClick ? "ring-2 ring-inset ring-blue-600" : "ring-1 ring-inset ring-gray-300 "}
-                    text-sm leading-6 cursor-pointer`}
-                onClick={() => isClickSet(!isClick)}>
-                <p>{isChoice}</p>
-                <div className={`transition-transform ${isClick ? 'rotate-180' : 'rotate-0'}`}>
-                    <FaChevronDown />
-                </div>
+            <select
+                className='py-2 md:py-4 px-5 text-gray-900 bg-white
+                ring-1 ring-inset ring-gray-300 
+                placeholder:text-gray-400 
+                focus:ring-2 focus:ring-inset 
+                focus:ring-blue-600 text-xs sm:text-sm
+                sm:leading-6 outline-none rounded'
+                {...register(name, validation)}>
                 {
-                    isClick &&
-                    <motion.div
-                        initial={{
-                            scale: 0,
-                            opacity: 0,
-                            y: "0",
-                        }}
-                        animate={{
-                            scale: 1,
-                            opacity: 1,
-                        }}
-                        transition={{
-                            duration: 0.2
-                        }}
-                        className="absolute top-12 left-0 
-                                    bg-white border
-                                     w-full origin-center">
-                        {
-                            dropDownItem.map(e => {
-                                return (
-                                    <p className='p-3 hover:bg-blue-50' key={e.id}
-                                        onClick={() => isChoiceSet(e.name)}
-                                    >
-                                        {e.name}
-                                    </p>
-                                )
-                            })
-                        }
-                    </motion.div>
+                    dropDownItem.map((e, i) => {
+                        return (
+                            i === 0 ?
+                                <option key={e.id} value="">...</option> :
+                                <option key={e.id} value={e.name}>{e.name}</option>
+                        )
+                    })
                 }
-            </div>
+
+
+            </select>
+            {error && (
+                <p className=" text-red-500 font-light text-sm">
+                    {error[name]?.message}
+                </p>
+            )}
         </div>
     )
 }

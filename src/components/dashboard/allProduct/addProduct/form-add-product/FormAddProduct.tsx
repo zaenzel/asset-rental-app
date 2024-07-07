@@ -2,18 +2,17 @@
 
 import TextInput from '@/components/global/text-input/TextInput'
 import { AddProductTypes } from '@/lib/types';
-import React, { useState } from 'react'
+import React from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form';
 import Dropdown from './dropdown/Dropdown';
 import DescInput from '@/components/global/text-input/DescInput';
 import Button from '@/components/global/button/Button';
 import { useRouter } from 'next/navigation';
+import ImageUpload from '../image-upload/ImageUpload';
 
 const FormAddProduct = () => {
     const router = useRouter()
     const { register, handleSubmit, watch, formState: { errors } } = useForm<AddProductTypes>();
-
-    const [isChoice, isChoiceSet] = useState<string>("Gedung")
 
     const onSubmit: SubmitHandler<AddProductTypes> = data => console.log(data);
 
@@ -23,7 +22,7 @@ const FormAddProduct = () => {
     }
 
     return (
-        <form className="flex flex-col gap-5" onSubmit={handleSubmit(onSubmit)}>
+        <form className="flex flex-col gap-5 w-full" onSubmit={handleSubmit(onSubmit)}>
             <TextInput
                 name='name'
                 title='Name'
@@ -37,6 +36,7 @@ const FormAddProduct = () => {
                 }}
                 error={errors}
             />
+
             <TextInput
                 name='price'
                 title='Price'
@@ -50,15 +50,45 @@ const FormAddProduct = () => {
                 }}
                 error={errors}
             />
+
             <Dropdown
-                isChoice={isChoice}
-                isChoiceSet={isChoiceSet}
+                name='category'
+                register={register}
+                validation={{
+                    required: {
+                        value: true,
+                        message: "Category is required",
+                    }
+                }}
+                error={errors}
             />
+
             <DescInput
                 title='Description'
+                name='description'
+                register={register}
+                validation={{
+                    required: {
+                        value: true,
+                        message: "Description is required",
+                    }
+                }}
+                error={errors}
             />
-            <input type="file" name="" id="" />
-            <div className="flex gap-x-2 self-end">
+
+            <ImageUpload
+                name='image'
+                register={register}
+                validation={{
+                    required: {
+                        value: true,
+                        message: "Image is required",
+                    }
+                }}
+                error={errors}
+            />
+
+            <div className="flex gap-x-2 self-end mt-5">
                 <Button
                     title='Cancel'
                     classname='bg-red-600 text-white font-semibold'
