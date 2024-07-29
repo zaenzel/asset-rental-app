@@ -18,7 +18,7 @@ const DescInput = ({
 }: PropsType) => {
   return (
     <div className="flex flex-col gap-2">
-      <p className='text-sm md:text-base'>{title}</p>
+      <p className='text-sm md:text-base text-gray-500'>{title}</p>
       <textarea
         className="
                 block w-full rounded-md border-0 
@@ -27,7 +27,7 @@ const DescInput = ({
                 placeholder:text-gray-400 
                 focus:ring-2 focus:ring-inset 
                 focus:ring-blue-600 sm:text-sm 
-                sm:leading-6"
+                sm:leading-6 hover:ring-blue-500"
         {...register(name, validation)}
       />
       {error && (

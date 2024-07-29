@@ -7,6 +7,10 @@ import { AiFillProduct } from "react-icons/ai";
 import { MdLocalOffer } from "react-icons/md";
 import { GiCarKey } from "react-icons/gi";
 
+type PropsType = {
+  isAdmin: boolean
+}
+
 const CustomLink = ({
   title,
   icon,
@@ -37,19 +41,22 @@ const CustomLink = ({
   )
 }
 
-const SideBar = () => {
+const SideBar = ({ isAdmin }: PropsType) => {
 
   return (
     <aside className='border-2 shadow-xl w-full h-fit p-6 rounded-2xl'>
       <h5 className='text-2xl font-semibold'>Category</h5>
       <nav className='flex flex-col gap-y-8 mt-10'>
-        <CustomLink
-          title='All Product'
-          icon={<AiFillProduct />}
-          color='text-blue-600'
-          classname='hover:text-blue-600'
-          href="/dashboard"
-        />
+        {
+          !isAdmin &&
+          <CustomLink
+            title='All Product'
+            icon={<AiFillProduct />}
+            color='text-blue-600'
+            classname='hover:text-blue-600'
+            href="/dashboard"
+          />
+        }
         <CustomLink
           title='Offers'
           icon={<MdLocalOffer />}

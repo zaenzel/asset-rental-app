@@ -2,10 +2,15 @@ import React, { Dispatch, SetStateAction } from 'react'
 import { motion } from "framer-motion"
 import { useRouter } from 'next/navigation'
 import BtnAuth from '../../btn-auth/BtnAuth'
+import { logout } from '@/lib/api/Auth'
+import { IronSession } from 'iron-session'
+import { SessionData } from '@/lib/types'
 
 type PropsType = {
     modalShow: boolean
     modalShowSet: Dispatch<SetStateAction<boolean>>
+    isLogin: boolean,
+    session: IronSession<SessionData>
 }
 
 const CustomMobileLink = ({ href, title, className = "", togle }:
@@ -38,7 +43,8 @@ const CustomMobileLink = ({ href, title, className = "", togle }:
     );
 };
 
-const Modal = ({ modalShow, modalShowSet }: PropsType) => {
+const Modal = ({ modalShow, modalShowSet, session, isLogin }: PropsType) => {
+    const router = useRouter()
 
     const handleClick = () => {
         modalShowSet(!modalShow)
@@ -77,13 +83,20 @@ const Modal = ({ modalShow, modalShowSet }: PropsType) => {
                 className="text-white"
                 togle={handleClick}
             />
-             <CustomMobileLink
+
+            <CustomMobileLink
                 href={"/dashboard"}
                 title={"Dashboard"}
                 className="text-white"
                 togle={handleClick}
             />
-            <BtnAuth href='/auth' title='Login' />
+
+
+            {
+                isLogin ?
+                    <BtnAuth handleclick={() => logout()} title='Logout' /> :
+                    <BtnAuth handleclick={() => router.push("/auth")} title='Login' />
+            }
         </motion.div>
     )
 }

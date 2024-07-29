@@ -9,18 +9,45 @@ import DescInput from '@/components/global/text-input/DescInput';
 import Button from '@/components/global/button/Button';
 import { useRouter } from 'next/navigation';
 import ImageUpload from '../image-upload/ImageUpload';
+import { addProduct } from '@/lib/api/Product';
+import { Bounce, ToastContainer, toast } from 'react-toastify';
 
 const FormAddProduct = () => {
     const router = useRouter()
-    const { register, handleSubmit, watch, formState: { errors } } = useForm<AddProductTypes>();
+    const { register, handleSubmit, reset, watch, formState: { errors } } = useForm<AddProductTypes>();
+    const file = watch("image")
 
-    const onSubmit: SubmitHandler<AddProductTypes> = data => console.log(data);
+    const onSubmit: SubmitHandler<AddProductTypes> = async (data) => {
+        const formData = new FormData();
+        
+        formData.append('name', data.name);
+        formData.append('price_per_hour', data.price.toString());
+        formData.append('category', data.category);
+        formData.append('description', data.description);
+        if (data.image && data.image.length > 0) {
+            formData.append('image', data.image[0]);
+        }
+
+        try {
+            const res = await addProduct(formData)
+            toast.success("Success Added Product !", {
+                position: "top-center"
+            });
+            console.log(res);
+        } catch (error) {
+            toast.error(`Failed Added Product !`, {
+                position: "top-center"
+            });
+            console.log(error);
+        }
+
+
+    };
 
     const handleReset = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
         router.back()
     }
-
     return (
         <form className="flex flex-col gap-5 w-full" onSubmit={handleSubmit(onSubmit)}>
             <TextInput
@@ -86,6 +113,8 @@ const FormAddProduct = () => {
                     }
                 }}
                 error={errors}
+                file={file}
+                reset={reset}
             />
 
             <div className="flex gap-x-2 self-end mt-5">
@@ -100,6 +129,20 @@ const FormAddProduct = () => {
                     type="submit"
                 />
             </div>
+
+            <ToastContainer
+                position="top-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+                transition={Bounce}
+            />
         </form>
     )
 }

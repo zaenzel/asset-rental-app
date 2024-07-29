@@ -3,9 +3,17 @@
 import React, { useState } from 'react'
 import Hamburger from './hamburger/Hamburger'
 import Modal from './modal/Modal'
-import { usePathname, } from 'next/navigation';
+import { usePathname, useRouter, } from 'next/navigation';
 import Link from 'next/link';
 import BtnAuth from '../btn-auth/BtnAuth';
+import { logout } from '@/lib/api/Auth';
+import { IronSession } from 'iron-session';
+import { SessionData } from '@/lib/types';
+
+type PorpsType = {
+    isLogin: boolean
+    session: IronSession<SessionData>
+}
 
 const CustomLink = ({ href, title, className = "" }:
     { href: string, title: string, className: string }) => {
@@ -29,11 +37,11 @@ const CustomLink = ({ href, title, className = "" }:
     );
 };
 
-const Navbar = () => {
+const Navbar = ({ isLogin, session }: PorpsType) => {
 
-    const [isAuth, isAuthSet] = useState(true)
     const [modalShow, modalShowSet] = useState(false)
     const asPath = usePathname()
+    const router = useRouter()
 
     return (
         <nav className={` 
@@ -74,7 +82,7 @@ const Navbar = () => {
                             className='text-black'
                         />
                         {
-                            isAuth &&
+                            isLogin &&
                             <CustomLink
                                 href='/dashboard'
                                 title='Dashboard'
@@ -85,7 +93,11 @@ const Navbar = () => {
                 </div>
 
                 <div className="hidden md:block">
-                    <BtnAuth href='/auth' title='Login' />
+                    {
+                        isLogin ?
+                            <BtnAuth handleclick={() => logout()} title='Logout' /> :
+                            <BtnAuth handleclick={() => router.push("/auth")} title='Login' />
+                    }
                 </div>
 
                 {/* mobile */}
@@ -100,6 +112,8 @@ const Navbar = () => {
             {
                 modalShow ? (
                     <Modal
+                        session={session}
+                        isLogin={isLogin}
                         modalShow={modalShow}
                         modalShowSet={modalShowSet} />
                 ) : null

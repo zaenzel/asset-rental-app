@@ -1,32 +1,49 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import React from 'react'
 
-const Card = () => {
+type PropsType = {
+    id: number
+    name: string;
+    slug:string;
+    description: string;
+    price_per_hour: number;
+    category: string;
+    image: string;
+}
+
+const Card = ({
+    id,
+    name,
+    slug,
+    description,
+    price_per_hour,
+    category,
+    image,
+}: PropsType) => {
     return (
-        <div className='border-[.5px] shadow rounded 
+        <Link href={`/${slug}`} className='border-[.5px] shadow rounded 
             flex flex-col gap-3 max-w-64 cursor-pointer
             hover:shadow-lg'>
             <div className="relative w-full h-40 rounded-t">
                 <Image
-                    src="/images/no-image.png"
+                    src={image ? image : '/images/no-image.png'}
                     alt="product-pic"
                     className='object-contain'
                     fill
                 />
             </div>
             <div className="flex flex-col gap-4 px-2 pb-5">
-                <h4>Title</h4>
-                <div className="flex">
-                    <h5>Rp. 200.000</h5>
-                    <h5>/ Day</h5>
+                <h4>{name}</h4>
+                <div className="flex justify-between items-center">
+                    <h5>Rp. {price_per_hour?.toLocaleString("id-ID")} </h5>
+                    <p className='text-sm text-gray-400'> / Day</p>
                 </div>
-                <p className='truncate'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse repellat quaerat eveniet,
-                    aut qui beatae, voluptatem sunt quod quidem
-                    eos temporibus inventore modi dolor aspernatur
-                    pariatur illum deserunt quos. Minima?
+                <p className='truncate'>
+                    {description}
                 </p>
             </div>
-        </div>
+        </Link>
     )
 }
 

@@ -1,5 +1,6 @@
 import Card from '@/components/global/card/Card';
 import WrapProduct from '@/components/global/wrap-product/WrapProduct';
+import { getProduct } from '@/lib/api/Product';
 import React from 'react'
 import { FcOrganization, FcAlphabeticalSortingAz, FcLandscape, FcInTransit } from "react-icons/fc";
 
@@ -31,8 +32,8 @@ const category = [
 
 ]
 
-const CardLists = () => {
-
+const CardLists = async () => {
+  const products = await getProduct()
 
   return (
     <WrapProduct>
@@ -56,12 +57,9 @@ const CardLists = () => {
       </div>
       <div className="flex justify-center">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
+          {
+            products.data.map((e: any, i: number) => <Card key={i} {...e} />)
+          }
         </div>
       </div>
     </WrapProduct>

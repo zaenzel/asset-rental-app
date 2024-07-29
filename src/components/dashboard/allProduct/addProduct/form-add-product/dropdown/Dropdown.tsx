@@ -23,7 +23,7 @@ const Dropdown = ({
 
     return (
         <div className="flex flex-col gap-2">
-            <p className='text-sm md:text-base'>Category</p>
+            <p className='text-sm md:text-base text-gray-500'>Category</p>
             <select
                 className='py-2 md:py-4 px-5 text-gray-900 bg-white
                 ring-1 ring-inset ring-gray-300 
@@ -35,9 +35,7 @@ const Dropdown = ({
                 {
                     dropDownItem.map((e, i) => {
                         return (
-                            i === 0 ?
-                                <option key={e.id} value="">...</option> :
-                                <option key={e.id} value={e.name}>{e.name}</option>
+                            <option key={e.id} value={e.name}>{e.name}</option>
                         )
                     })
                 }

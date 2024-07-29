@@ -1,6 +1,14 @@
+import { getSession } from '@/lib/api/Auth'
+import { redirect } from 'next/navigation'
 import React from 'react'
 
-const page = () => {
+const page = async () => {
+
+  const session = await getSession()
+  if (!session.isLoggedIn) {
+    redirect("/auth")
+  } 
+
   return (
     <div>page on rent</div>
   )

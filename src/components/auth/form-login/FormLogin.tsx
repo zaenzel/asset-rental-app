@@ -1,18 +1,45 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import TextInput from '../../global/text-input/TextInput'
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { LoginTypes } from '@/lib/types';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
+import { userLogin } from '@/lib/api/Auth';
+import { Bounce, ToastContainer, toast } from 'react-toastify';
 
 
 
 const FormLogin = () => {
     const { register, handleSubmit, watch, formState: { errors } } = useForm<LoginTypes>();
     const router = useRouter()
+    const [isLoading, isLoadingSet] = useState(false)
 
-    const onSubmit: SubmitHandler<LoginTypes> = data => console.log(data);
+    const onSubmit: SubmitHandler<LoginTypes> = async (data) => {
+        isLoadingSet(true)
+        try {
+            await userLogin(data)
+
+            toast.success("Success Login !", {
+                position: "top-center"
+            });
+            setTimeout(() => {
+                router.push("/dashboard")
+            }, 2000)
+        } catch (error: any) {
+            console.log(error);
+            if (error.response?.status == "401") {
+                return toast.warn("User not found !", {
+                    position: "top-center"
+                });
+            }
+            toast.error(`Failed Login !`, {
+                position: "top-center"
+            });
+        } finally {
+            isLoadingSet(false)
+        }
+    }
 
     return (
         <form className='flex flex-col gap-5 md:gap-7' onSubmit={handleSubmit(onSubmit)}>
@@ -47,9 +74,22 @@ const FormLogin = () => {
                 bg-blue-700 hover:bg-blue-800 transition-colors rounded-md text-sm
                 font-bold text-white'
                 type='submit'
-                onClick={() => router.push("/dashboard")}>
+                disabled={isLoading}>
                 Login
             </button>
+            <ToastContainer
+                position="top-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+                transition={Bounce}
+            />
         </form>
     )
 }

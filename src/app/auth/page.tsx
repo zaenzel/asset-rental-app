@@ -18,7 +18,7 @@ const page = () => {
                     }
                 </h4>
                 {
-                    isLogin ? <FormLogin /> : <FormRegist />
+                    isLogin ? <FormLogin /> : <FormRegist isLoginSet={isLoginSet} />
                 }
                 <div className="flex gap-x-1 items-center justify-center w-full">
                     <hr className='flex-1 border border-gray-300' />
