@@ -1,15 +1,15 @@
+import TrxListing from '@/components/dashboard/offers/TrxListing'
 import { getSession } from '@/lib/api/Auth'
-import { redirect } from 'next/navigation'
 import React from 'react'
 
 const page = async () => {
-  const session = await getSession()
-  if (!session.isLoggedIn) {
-    redirect("/auth")
-  }
 
+  const session = await getSession()
+  console.log(session);
   return (
-    <div>page offers</div>
+    <div className="">
+      <TrxListing isAdmin={session.isAdmin} user_id={session.userId} />
+    </div>
   )
 }
 

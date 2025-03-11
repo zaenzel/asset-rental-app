@@ -2,11 +2,19 @@
 
 import FormLogin from '@/components/auth/form-login/FormLogin'
 import FormRegist from '@/components/auth/form-regist/FormRegist'
-import React, { useState } from 'react'
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react'
 
 const page = () => {
-
+    const router = useRouter()
     const [isLogin, isLoginSet] = useState<boolean>(true)
+    const [isSuccess, isSuccessSet] = useState<boolean>(false)
+
+    useEffect(() => {
+        if (isSuccess) {
+            router.push("/dashboard")
+        }
+    }, [isSuccess])
 
     return (
         <main className='flex justify-center items-center p-5 min-h-screen'>
@@ -18,7 +26,7 @@ const page = () => {
                     }
                 </h4>
                 {
-                    isLogin ? <FormLogin /> : <FormRegist isLoginSet={isLoginSet} />
+                    isLogin ? <FormLogin isSuccessSet={isSuccessSet} /> : <FormRegist isLoginSet={isLoginSet} />
                 }
                 <div className="flex gap-x-1 items-center justify-center w-full">
                     <hr className='flex-1 border border-gray-300' />

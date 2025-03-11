@@ -5,7 +5,6 @@ import { FaChevronDown } from "react-icons/fa6";
 import { motion } from "framer-motion"
 import { dropDownItem } from '@/lib/utils';
 import { UseFormRegister, UseFormSetValue } from 'react-hook-form';
-import { AddProductTypes } from '@/lib/types';
 
 type PropsType = {
     register: UseFormRegister<any>

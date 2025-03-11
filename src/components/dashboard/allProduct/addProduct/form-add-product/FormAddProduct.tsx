@@ -33,12 +33,10 @@ const FormAddProduct = () => {
             toast.success("Success Added Product !", {
                 position: "top-center"
             });
-            console.log(res);
         } catch (error) {
             toast.error(`Failed Added Product !`, {
                 position: "top-center"
             });
-            console.log(error);
         }
 
 

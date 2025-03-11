@@ -1,4 +1,5 @@
 import { Preview } from '@/lib/types'
+import { rupiah } from '@/lib/utils'
 import { Button } from '@nextui-org/react'
 import React from 'react'
 
@@ -49,8 +50,7 @@ const PreviewBooking = ({
                 <h5 className='text-sm text-gray-600 font-medium'>Price Total</h5>
                 <h5 className='px-2 text-sm sm:text-base 
                                                 text-gray-500 font-semibold'>
-                    <span className='text-gray-400 font-medium'>Rp {" "}</span>
-                    {(previewProps.hoursDifference * price).toLocaleString()}
+                    {rupiah(previewProps.hoursDifference * price)}
                 </h5>
             </div>
             <div className="flex justify-between gap-x-3">

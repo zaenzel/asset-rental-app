@@ -2,18 +2,13 @@ import BtnAddProduct from '@/components/dashboard/allProduct/btn-add-product/Btn
 import Card from '@/components/global/card/Card'
 import { getSession } from '@/lib/api/Auth'
 import { getProduct } from '@/lib/api/Product'
-import { AddProductTypes } from '@/lib/types'
 import { redirect } from 'next/navigation'
 import React from 'react'
 
 const page = async () => {
+
   const session = await getSession()
-
   const products = await getProduct()
-
-  if (!session.isLoggedIn) {
-    redirect("/auth")
-  } 
 
   if (!session.isAdmin) {
     redirect("/dashboard/offers")

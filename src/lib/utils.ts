@@ -23,3 +23,11 @@ export const dropDownItem: DropDownItemTypes = [
 export const formateDate = (date: Date) => {
   return moment(date).format("YYYY-MM-DD HH:mm:ss");
 };
+
+export const rupiah = (value: number) => {
+  return new Intl.NumberFormat("id", {
+    style: "currency",
+    currency: "IDR",
+    maximumFractionDigits: 0,
+  }).format(value);
+};

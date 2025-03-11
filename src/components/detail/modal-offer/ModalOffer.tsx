@@ -1,16 +1,20 @@
 'use client'
 
-import { Button, DateRangePicker, Modal, ModalBody, ModalContent, ModalHeader } from '@nextui-org/react';
+import { Modal, ModalBody, ModalContent, ModalHeader } from '@nextui-org/react';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import moment from 'moment';
 import { toast } from 'react-toastify';
 import { formateDate } from '@/lib/utils';
 import Toast from '@/components/global/toast/Toast';
-import { Preview } from '@/lib/types';
+import { BookingTypes, Preview } from '@/lib/types';
 import PreviewBooking from './preview/PreviewBooking';
 import SelectDate from './select-date/SelectDate';
+import { addTransaction } from '@/lib/api/Transaction';
+import { useRouter } from 'next/navigation'
 
 type PropsType = {
+    user_id: any,
+    product_id: number
     price: number
     isOpen: boolean
     onOpen: Dispatch<SetStateAction<boolean>>
@@ -18,7 +22,17 @@ type PropsType = {
     onOpenChange: () => void
 }
 
+const MessageBooking = () => (
+    <div className="">
+        <h5>Success Booking !</h5>
+        <p>You will be contacted by the admin to continue payment</p>
+    </div>
+)
+
+
 const ModalOffer = ({
+    user_id,
+    product_id,
     price,
     isOpen,
     onOpen,
@@ -26,6 +40,7 @@ const ModalOffer = ({
     onOpenChange
 }: PropsType) => {
 
+    const router = useRouter()
     const [selectedDates, setSelectedDates] = useState<any>({ start: null, end: null });
     const [currentDateTime, setCurrentDateTime] = useState('');
     const [futureDateTime, setFutureDateTime] = useState('');
@@ -35,9 +50,11 @@ const ModalOffer = ({
         hoursDifference: 0,
         next: false
     })
-    const [date, dateSet] = useState({
-        startDate: '',
-        endDate: ''
+    const [bookingData, bookingDataSet] = useState<BookingTypes>({
+        user_id,
+        product_id,
+        start_booking_date: '',
+        end_booking_date: ''
     })
 
     const onDateChange = (dateRange: any) => {
@@ -50,7 +67,11 @@ const ModalOffer = ({
             const startDate = new Date(start.year, start.month - 1, start.day, start.hour, start.minute, 0,)
             const endDate = new Date(end.year, end.month - 1, end.day, end.hour, end.minute, 0,)
 
-            dateSet({ startDate: formateDate(startDate), endDate: formateDate(endDate) })
+            bookingDataSet(prev => ({
+                ...prev,
+                start_booking_date: formateDate(startDate),
+                end_booking_date: formateDate(endDate)
+            }))
 
             const startMoment = moment(startDate);
             const endMoment = moment(endDate);
@@ -82,8 +103,34 @@ const ModalOffer = ({
         })
     }
 
-    const onSubmit = () => {
-        console.log(date);
+    const onSubmit = async () => {
+        if (user_id === undefined) {
+            router.push("/auth")
+            return toast.error("Login first")
+        }
+        await toast.promise(
+            addTransaction(bookingData),
+            {
+                pending: 'Loading',
+                success: {
+                    render() {
+                        previewSet({
+                            startDate: '',
+                            endDate: '',
+                            hoursDifference: 0,
+                            next: false
+                        })
+                        return <MessageBooking />
+                    }
+                },
+                error: {
+                    render({ data }: any) {
+                        // When the promise reject, data will contains the error
+                        return `Failed, ${data.response.data.message}`
+                    }
+                }
+            }
+        );
     }
 
     useEffect(() => {
@@ -126,27 +173,33 @@ const ModalOffer = ({
                 }
             }}>
             <ModalContent>
-                {(onClose) => (
+                {() => (
                     <>
                         <ModalHeader>
-                            <h5 className='text-base md:text-lg text-gray-500'>Select Date</h5>
+                            <h5 className='text-base md:text-lg text-gray-500'>
+                                {
+                                    preview.next ?
+                                        'Preview Date' :
+                                        'Select Date'
+                                }
+                            </h5>
                         </ModalHeader>
                         <ModalBody className='mb-5'>
                             {
                                 preview.next ?
-                                    <PreviewBooking 
+                                    <PreviewBooking
                                         previewProps={preview}
                                         onReset={onReset}
                                         onSubmit={onSubmit}
                                         price={price}
                                     />
                                     :
-                                   
-                                    <SelectDate 
-                                    currentDateTime={currentDateTime}
-                                    futureDateTime={futureDateTime}
-                                    onDateChange={onDateChange}
-                                    handleDateChange={handleDateChange}
+
+                                    <SelectDate
+                                        currentDateTime={currentDateTime}
+                                        futureDateTime={futureDateTime}
+                                        onDateChange={onDateChange}
+                                        handleDateChange={handleDateChange}
                                     />
 
                             }

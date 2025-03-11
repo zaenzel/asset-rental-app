@@ -1,6 +1,7 @@
 import Description from "@/components/detail/description/Description";
 import { getSession } from "@/lib/api/Auth";
 import { getDetailProduct } from "@/lib/api/Product";
+import { rupiah } from "@/lib/utils";
 import Image from "next/image";
 
 export default async function Page({ params }: { params: { slug: string } }) {
@@ -8,6 +9,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
     const {
         id,
         name,
+        slug,
         price_per_hour,
         category,
         description,
@@ -29,7 +31,9 @@ export default async function Page({ params }: { params: { slug: string } }) {
 
                 <div className="space-y-3 md:hidden">
                     <h5 className="text-2xl font-semibold">{name}</h5>
-                    <p>{`Rp. ${price_per_hour} / Day`}</p>
+                    <p className="text-lg font-semibold">{`${rupiah(price_per_hour)}`}
+                        <span className="text-neutral-400 text-base font-normal">{' '}/ Day</span>
+                    </p>
                 </div>
 
                 <div className="relative w-full h-64 md:h-full md:min-h-96 md:basis-1/2">
@@ -41,18 +45,17 @@ export default async function Page({ params }: { params: { slug: string } }) {
                 </div>
 
                 <Description
+                    user_id={session.userId}
                     id={id}
                     name={name}
-                    price={price_per_hour}
+                    slug={slug}
+                    price_per_hour={price_per_hour}
                     category={category}
                     description={description}
                     image={image}
                     isAdmin={!session.isAdmin}
                 />
             </div>
-
-
-
         </div>
     )
 }

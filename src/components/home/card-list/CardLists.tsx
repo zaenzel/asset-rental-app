@@ -1,6 +1,7 @@
 import Card from '@/components/global/card/Card';
 import WrapProduct from '@/components/global/wrap-product/WrapProduct';
 import { getProduct } from '@/lib/api/Product';
+import { IProduct } from '@/lib/types';
 import React from 'react'
 import { FcOrganization, FcAlphabeticalSortingAz, FcLandscape, FcInTransit } from "react-icons/fc";
 
@@ -32,9 +33,8 @@ const category = [
 
 ]
 
-const CardLists = async () => {
-  const products = await getProduct()
-
+const CardLists = ({ products }: { products: any }) => {
+  
   return (
     <WrapProduct>
       <div className="

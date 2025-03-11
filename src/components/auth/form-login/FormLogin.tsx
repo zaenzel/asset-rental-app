@@ -1,18 +1,20 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { Dispatch, SetStateAction, useState } from 'react'
 import TextInput from '../../global/text-input/TextInput'
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { LoginTypes } from '@/lib/types';
-import { redirect, useRouter } from 'next/navigation';
 import { userLogin } from '@/lib/api/Auth';
 import { Bounce, ToastContainer, toast } from 'react-toastify';
 
+type PropsType = {
+    isSuccessSet: Dispatch<SetStateAction<boolean>>
+}
 
-
-const FormLogin = () => {
+const FormLogin = ({
+    isSuccessSet,
+}: PropsType) => {
     const { register, handleSubmit, watch, formState: { errors } } = useForm<LoginTypes>();
-    const router = useRouter()
     const [isLoading, isLoadingSet] = useState(false)
 
     const onSubmit: SubmitHandler<LoginTypes> = async (data) => {
@@ -23,11 +25,9 @@ const FormLogin = () => {
             toast.success("Success Login !", {
                 position: "top-center"
             });
-            setTimeout(() => {
-                router.push("/dashboard")
-            }, 2000)
+
+            isSuccessSet(true)
         } catch (error: any) {
-            console.log(error);
             if (error.response?.status == "401") {
                 return toast.warn("User not found !", {
                     position: "top-center"
